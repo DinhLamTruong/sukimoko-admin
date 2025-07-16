@@ -204,7 +204,6 @@ function User() {
       alert('Failed to delete user');
     }
   };
-  console.log(currentUser);
 
   return (
     <div className="p-6 w-full">

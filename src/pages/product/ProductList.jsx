@@ -87,10 +87,11 @@ const ProductList = () => {
         ) : (
           <div className="overflow-x-auto w-full">
             <button
-              onClick={fetchProducts}
-              className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={handleAddClick}
+              className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              title="Add Product"
             >
-              Refresh Products
+              Add Product
             </button>
             <table className="min-w-full w-full border border-gray-300">
               <thead>
@@ -117,131 +118,185 @@ const ProductList = () => {
                     Suggestion
                   </th>
                   <th className="border border-gray-300 px-4 py-2 text-left">
-                    Thao tác
+                    Discounts
                   </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map(product => (
-                  <tr key={product.id} className="border-t border-gray-300">
-                    <td className="border border-gray-300 px-4 py-2 max-w-xs truncate">
-                      {product.name}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="w-26 h-16 object-cover"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-{product.price ? Number(product.price).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) : ''}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {product.quantity}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {product.categoryType}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <select
-                        value={product.bestSelling ? 'Yes' : 'No'}
-                        onChange={async e => {
-                          const newValue = e.target.value === 'Yes';
-                          try {
-                            const response = await fetch(
-                              `http://localhost:3001/api/product?type=edit&id=${product.id}`,
-                              {
-                                method: 'PUT',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ bestSelling: newValue }),
-                              }
-                            );
-                            if (!response.ok) {
-                              throw new Error('Failed to update bestSelling');
-                            }
-                            const updatedProduct = await response.json();
-                            const updatedProducts = products.map(p =>
-                              p.id === product.id ? { ...p, bestSelling: updatedProduct.bestSelling } : p
-                            );
-                            setProducts(updatedProducts);
-                          } catch (error) {
-                            alert(error.message || 'Error updating bestSelling');
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Classifications
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Thao tác
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product.id} className="border-t border-gray-300">
+                <td className="border border-gray-300 px-4 py-2 max-w-xs truncate">
+                  {product.name}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="w-26 h-16 object-cover"
+                  />
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {product.price
+                    ? Number(product.price).toLocaleString('vi-VN', {
+                        maximumFractionDigits: 0,
+                      })
+                    : ''}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {product.quantity}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {product.categoryType}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <select
+                    value={product.bestSelling ? 'Yes' : 'No'}
+                    onChange={async e => {
+                      const newValue = e.target.value === 'Yes';
+                      try {
+                        const response = await fetch(
+                          `http://localhost:3001/api/product?type=edit&id=${product.id}`,
+                          {
+                            method: 'PUT',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ bestSelling: newValue }),
                           }
-                        }}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      >
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <select
-                        value={product.suggestion ? 'Yes' : 'No'}
-                        onChange={async e => {
-                          const newValue = e.target.value === 'Yes';
-                          try {
-                            const response = await fetch(
-                              `http://localhost:3001/api/product?type=edit&id=${product.id}`,
-                              {
-                                method: 'PUT',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ suggestion: newValue }),
+                        );
+                        if (!response.ok) {
+                          throw new Error('Failed to update bestSelling');
+                        }
+                        const updatedProduct = await response.json();
+                        const updatedProducts = products.map(p =>
+                          p.id === product.id
+                            ? {
+                                ...p,
+                                bestSelling: updatedProduct.bestSelling,
                               }
-                            );
-                            if (!response.ok) {
-                              throw new Error('Failed to update suggestion');
-                            }
-                            const updatedProduct = await response.json();
-                            const updatedProducts = products.map(p =>
-                              p.id === product.id ? { ...p, suggestion: updatedProduct.suggestion } : p
-                            );
-                            setProducts(updatedProducts);
-                          } catch (error) {
-                            alert(error.message || 'Error updating suggestion');
+                            : p
+                        );
+                        setProducts(updatedProducts);
+                      } catch (error) {
+                        alert(
+                          error.message || 'Error updating bestSelling'
+                        );
+                      }
+                    }}
+                    className="border border-gray-300 rounded px-2 py-1"
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <select
+                    value={product.suggestion ? 'Yes' : 'No'}
+                    onChange={async e => {
+                      const newValue = e.target.value === 'Yes';
+                      try {
+                        const response = await fetch(
+                          `http://localhost:3001/api/product?type=edit&id=${product.id}`,
+                          {
+                            method: 'PUT',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ suggestion: newValue }),
                           }
-                        }}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      >
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 space-x-2">
-                      <button
-                        onClick={() => handleEditClick(product)}
-                        className="text-[#fa8c16] hover:text-orange-700 cursor-pointer mr-4"
-                        title="Edit"
-                      >
-                        <FiEdit />
-                      </button>
-                      <button
-                        onClick={handleAddClick}
-                        className="text-green-600 hover:text-green-800 cursor-pointer mr-4"
-                        title="Add Product"
-                      >
-                        <FiPlus />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(product)}
-                        className="text-[#f5222d] hover:text-red-700 cursor-pointer mr-4"
-                        title="Delete"
-                      >
-                        <FiTrash2 />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                        );
+                        if (!response.ok) {
+                          throw new Error('Failed to update suggestion');
+                        }
+                        const updatedProduct = await response.json();
+                        const updatedProducts = products.map(p =>
+                          p.id === product.id
+                            ? {
+                                ...p,
+                                suggestion: updatedProduct.suggestion,
+                              }
+                            : p
+                        );
+                        setProducts(updatedProducts);
+                      } catch (error) {
+                        alert(error.message || 'Error updating suggestion');
+                      }
+                    }}
+                    className="border border-gray-300 rounded px-2 py-1"
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {product.productDiscounts &&
+                  product.productDiscounts.length > 0 ? (
+                    <ul className="list-none list-inside">
+                      {product.productDiscounts.map(pd => (
+                        <li key={pd.discount.id}>
+                          {pd.discount.code} - {pd.discount.description}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span>No discounts</span>
+                  )}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {product.classifications && product.classifications.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {product.classifications.map((classification, idx) => (
+                        <div key={idx} className="flex flex-col items-center border p-1 rounded">
+                          <img
+                            src={classification.imageUrl}
+                            alt={classification.label}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <span className="text-xs mt-1">{classification.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span>No classifications</span>
+                  )}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 space-x-2">
+                  <button
+                    onClick={() => handleEditClick(product)}
+                    className="text-[#fa8c16] hover:text-orange-700 cursor-pointer mr-4"
+                    title="Edit"
+                  >
+                    <FiEdit />
+                  </button>
+                  <button
+                    onClick={handleAddClick}
+                    className="text-green-600 hover:text-green-800 cursor-pointer mr-4"
+                    title="Add Product"
+                  >
+                    <FiPlus />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(product)}
+                    className="text-[#f5222d] hover:text-red-700 cursor-pointer mr-4"
+                    title="Delete"
+                  >
+                    <FiTrash2 />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </>
+    )}
+  </div>
+</>
   );
 };
 export default ProductList;

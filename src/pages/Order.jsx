@@ -112,7 +112,6 @@ function Order() {
         throw new Error('Failed to fetch order details');
       }
       const data = await response.json();
-      console.log(data);
       setSelectedOrderDetails(data);
       setModalOpen(true);
     } catch (err) {
@@ -172,6 +171,8 @@ function Order() {
                       <th className="text-left px-4 py-2">Phone</th>
                       <th className="text-left px-4 py-2">Address</th>
                       <th className="text-left px-4 py-2">Note</th>
+                      <th className="text-left px-4 py-2">Discount Code</th>
+                      <th className="text-left px-4 py-2">Shipping Method</th>
                       <th className="text-left px-4 py-2">Total Price</th>
                       <th className="text-left px-4 py-2">Status</th>
                       <th className="text-left px-4 py-2">Payment</th>
@@ -202,6 +203,9 @@ function Order() {
                           </small>
                         </td>
                         <td className="px-4 py-2">{order.note || 'N/A'}</td>
+                        <td className="px-4 py-2">{order.discountCode || 'N/A'}</td>
+                        <td className="px-4 py-2">{order.shippingMethod || 'N/A'}</td>
+
                         <td className="px-4 py-2">
                           {Number(order.totalPrice)?.toLocaleString('vi-VN')}₫
                         </td>

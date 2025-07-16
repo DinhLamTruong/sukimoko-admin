@@ -6,6 +6,8 @@ import {
   FiGrid,
   FiSettings,
   FiFileText,
+  FiMail,
+  FiTag
 } from 'react-icons/fi';
 
 function Sidebar() {
@@ -15,6 +17,8 @@ function Sidebar() {
     // { id: 3, name: 'Đơn hàng', link: 'order', icon: <FiShoppingCart /> },
     { id: 4, name: 'Người dùng', link: 'user', icon: <FiUser /> },
     { id: 5, name: 'News', link: 'news', icon: <FiFileText /> },
+    { id: 6, name: 'Contact', link: 'contact', icon: <FiMail /> },
+    { id: 7, name: 'Discounts', link: 'discounts', icon: <FiTag /> },
     // { name: 'Cài đặt', icon: <FiSettings /> },
   ];
 

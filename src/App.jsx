@@ -11,6 +11,8 @@ import User from './pages/User';
 import './App.css';
 import NewsManagement from './pages/NewsManagement';
 import ProductList from './pages/product/ProductList';
+import Contact from './pages/Contact';
+import DiscountAdmin from './pages/Discounts';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,6 +42,8 @@ function App() {
             <Route path="/product" element={<ProductList />} />
             <Route path="/news" element={<NewsManagement />} />
             <Route path="/orders" element={<Order />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/discounts" element={<DiscountAdmin />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </DefaultLayout>

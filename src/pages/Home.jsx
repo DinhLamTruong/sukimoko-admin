@@ -10,7 +10,7 @@ function Home() {
 
   useEffect(() => {
     // Fetch product count
-    fetch('http://localhost:3001/api/public/product-count', {
+    fetch('http://localhost:3001/api/dashboard/product-count', {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -24,7 +24,7 @@ function Home() {
       });
 
     // Fetch total revenue
-    fetch('http://localhost:3001/api/public/total-revenue', {
+    fetch('http://localhost:3001/api/dashboard/total-revenue', {
       credentials: 'include',
     })
       .then(res => res.json())
