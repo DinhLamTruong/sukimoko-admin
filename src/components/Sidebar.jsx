@@ -2,9 +2,7 @@ import { Link, NavLink } from 'react-router-dom';
 import {
   FiBox,
   FiUser,
-  FiShoppingCart,
   FiGrid,
-  FiSettings,
   FiFileText,
   FiMail,
   FiTag
@@ -13,13 +11,12 @@ import {
 function Sidebar() {
   const navItems = [
     { id: 1, name: 'Dashboard', link: '/', icon: <FiGrid /> },
-    { id: 2, name: 'Sản phẩm', link: 'product', icon: <FiBox /> },
+    { id: 2, name: 'Products', link: 'product', icon: <FiBox /> },
     // { id: 3, name: 'Đơn hàng', link: 'order', icon: <FiShoppingCart /> },
-    { id: 4, name: 'Người dùng', link: 'user', icon: <FiUser /> },
+    { id: 4, name: 'Users', link: 'user', icon: <FiUser /> },
     { id: 5, name: 'News', link: 'news', icon: <FiFileText /> },
     { id: 6, name: 'Contact', link: 'contact', icon: <FiMail /> },
     { id: 7, name: 'Discounts', link: 'discounts', icon: <FiTag /> },
-    // { name: 'Cài đặt', icon: <FiSettings /> },
   ];
 
   return (

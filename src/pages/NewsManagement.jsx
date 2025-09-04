@@ -17,7 +17,7 @@ const NewsManagement = () => {
   const [editing, setEditing] = useState(false);
 
   const fetchNews = async () => {
-    const res = await fetch(API_URL + '/api/news');
+    const res = await fetch(API_URL + '/news');
     const data = await res.json();
     setNewsList(data);
   };
@@ -47,12 +47,12 @@ const NewsManagement = () => {
     }
 
     if (editing) {
-      await fetch(API_URL + '/api/news/' + form.id, {
+      await fetch(API_URL + '/news/' + form.id, {
         method: 'PUT',
         body: formData,
       });
     } else {
-      await fetch(API_URL + '/api/news', {
+      await fetch(API_URL + '/news', {
         method: 'POST',
         body: formData,
       });
@@ -85,7 +85,7 @@ const NewsManagement = () => {
 
   const handleDelete = async id => {
     if (window.confirm('Are you sure you want to delete this news item?')) {
-      await fetch(API_URL + '/api/news/' + id, { method: 'DELETE' });
+      await fetch(API_URL + '/news/' + id, { method: 'DELETE' });
       fetchNews();
     }
   };

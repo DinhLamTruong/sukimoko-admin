@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Header from '../components/Header';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 // Helper function to decode JWT token payload
 function parseJwt(token) {
   try {
@@ -66,7 +68,7 @@ function User() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      const res = await fetch('http://localhost:3001/api/user', {
+      const res = await fetch(`${API_BASE_URL}/user`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,7 +95,7 @@ function User() {
         throw new Error('No authentication token found');
       }
       const res = await fetch(
-        `http://localhost:3001/api/user/change-password`,
+        `${API_BASE_URL}/user/change-password`,
         {
           method: 'POST',
           headers: {
@@ -131,7 +133,7 @@ function User() {
       const userData = { ...values };
       delete userData.image;
 
-      const res = await fetch('http://localhost:3001/api/user/register', {
+      const res = await fetch(`{API_BASE_URL}/user/register`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -142,14 +144,14 @@ function User() {
       if (!res.ok) {
         throw new Error('Failed to create user');
       }
-      const data = await res.json();
+      // const data = await res.json();
 
       // If avatar file selected, upload it
       if (selectedAvatarFile) {
         const formData = new FormData();
         formData.append('file', selectedAvatarFile);
         const uploadResponse = await fetch(
-          `http://localhost:3001/api/user/upload-avatar`,
+          `${API_BASE_URL}/user/upload-avatar`,
           {
             method: 'POST',
             headers: {
@@ -184,13 +186,13 @@ function User() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      const res = await fetch(`http://localhost:3001/api/user`, {
+      const res = await fetch(`${API_BASE_URL}/user/${userId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: userId }),
+        // body: JSON.stringify({ id: userId }),
       });
       if (!res.ok) {
         throw new Error(
@@ -246,7 +248,7 @@ function User() {
                   )}
                   <button
                     className="bg-red-500 cursor-pointer text-white px-3 py-1 rounded ml-4"
-                    onClick={() => handleDeleteUser(user.id)}
+                    onClick={() => handleDeleteUser(user.userId)}
                   >
                     Xóa người dùng
                   </button>

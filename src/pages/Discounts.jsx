@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 import Header from '../components/Header';
 
@@ -31,7 +32,7 @@ export default function DiscountAdmin() {
   const fetchDiscounts = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/admin/discounts');
+      const res = await fetch(`${API_BASE_URL}/api/admin/discounts`);
       if (!res.ok) throw new Error('Failed to fetch discounts');
       const data = await res.json();
       // Map backend fields to frontend fields
@@ -75,7 +76,7 @@ export default function DiscountAdmin() {
     if (window.confirm('Bạn có chắc chắn muốn xóa mã này?')) {
       try {
         const res = await fetch(
-          `http://localhost:3001/api/admin/discounts/${id}`,
+          `${API_BASE_URL}/admin/discounts/${id}`,
           { method: 'DELETE' }
         );
         if (!res.ok) throw new Error('Failed to delete discount');
@@ -108,7 +109,7 @@ export default function DiscountAdmin() {
       let res;
       if (editingDiscount) {
         res = await fetch(
-          `http://localhost:3001/api/admin/discounts/${newDiscount.id}`,
+          `${API_BASE_URL}/admin/discounts/${newDiscount.id}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -116,7 +117,7 @@ export default function DiscountAdmin() {
           }
         );
       } else {
-        res = await fetch('http://localhost:3001/api/admin/discounts', {
+        res = await fetch(`${API_BASE_URL}/admin/discounts`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -231,18 +232,20 @@ export default function DiscountAdmin() {
                   )}
                 </td>
                 <td className="p-2 border">
-                  <button
-                    onClick={() => handleEdit(d)}
-                    className="px-2 py-1 mr-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    onClick={() => handleDelete(d.id)}
-                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Xóa
-                  </button>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => handleEdit(d)}
+                      className="px-2 py-1 mr-2 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDelete(d.id)}
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                      Xóa
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

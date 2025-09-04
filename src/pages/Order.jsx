@@ -119,6 +119,29 @@ function Order() {
     }
   };
 
+  // Handle Delete Products click
+  const handleDeleteProductsClick = async orderId => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete order ${orderId}?`);
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetchWithAuth(
+        `http://localhost:3001/api/order/${orderId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      if (!response || !response.ok) {
+        throw new Error('Failed to delete order');
+      }
+      // Update local state by removing the deleted order
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+      alert('Order deleted successfully');
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   // Close modal
   const closeModal = () => {
     setModalOpen(false);
@@ -141,13 +164,13 @@ function Order() {
             <div className="mb-4 flex items-center space-x-2">
               <button
                 onClick={handleFetchLatestClick}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
               >
                 Xem đơn hàng mới nhất
               </button>
               <button
                 onClick={handleFetchAllClick}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                className="bg-gray-400 text-white p-2 rounded hover:bg-gray-500"
               >
                 Xem tất cả đơn hàng
               </button>
@@ -165,35 +188,42 @@ function Order() {
                 <table className="min-w-full bg-white rounded shadow overflow-hidden">
                   <thead className="bg-gray-200">
                     <tr>
-                      <th className="text-left px-4 py-2">Order ID</th>
-                      <th className="text-left px-4 py-2">Customer</th>
-                      <th className="text-left px-4 py-2">Date</th>
-                      <th className="text-left px-4 py-2">Phone</th>
-                      <th className="text-left px-4 py-2">Address</th>
-                      <th className="text-left px-4 py-2">Note</th>
-                      <th className="text-left px-4 py-2">Discount Code</th>
-                      <th className="text-left px-4 py-2">Shipping Method</th>
-                      <th className="text-left px-4 py-2">Total Price</th>
-                      <th className="text-left px-4 py-2">Status</th>
-                      <th className="text-left px-4 py-2">Payment</th>
-                      <th className="text-left px-4 py-2">Actions</th>
+                      <th className="text-left p-2">Order ID</th>
+                      <th className="text-left p-2">Customer</th>
+                      <th className="text-left p-2">Date</th>
+                      <th className="text-left p-2">Phone</th>
+                      <th className="text-left p-2">Address</th>
+                      <th className="text-left p-2">Note</th>
+                      <th className="text-left p-2">Discount Code</th>
+                      <th className="text-left p-2">Shipping Method</th>
+                      <th className="text-left p-2">Total Price</th>
+                      <th className="text-left p-2">Status</th>
+                      <th className="text-left p-2">Payment</th>
+                      <th className="text-left p-2">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {orders.map(order => (
                       <tr key={order.id} className="border-t">
-                        <td className="px-4 py-2">{order.id}</td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">{order.id}</td>
+                        <td className="p-2">
                           {order.user?.fullName ||
                             order.fullName ||
                             order.customerEmail ||
                             'N/A'}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">
                           {new Date(order.createdAt).toLocaleDateString()}
                         </td>
-                        <td className="px-4 py-2">{order.phone || 'N/A'}</td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">{order.phone || 'N/A'}</td>
+                        <td
+                          className="p-2 line-clamp-6"
+                          title={
+                            `${order.address || ''} ${order.province || ''} ${
+                              order.district || ''
+                            } ${order.ward || ''}`.trim() || 'N/A'
+                          }
+                        >
                           {order.address || 'N/A'}
                           <br />
                           <small className="text-gray-600">
@@ -202,20 +232,20 @@ function Order() {
                             {order.ward && <span>, {order.ward}</span>}
                           </small>
                         </td>
-                        <td className="px-4 py-2">{order.note || 'N/A'}</td>
-                        <td className="px-4 py-2">{order.discountCode || 'N/A'}</td>
-                        <td className="px-4 py-2">{order.shippingMethod || 'N/A'}</td>
+                        <td className="p-2">{order.note || 'N/A'}</td>
+                        <td className="p-2">{order.discountCode || 'N/A'}</td>
+                        <td className="p-2">{order.shippingMethod || 'N/A'}</td>
 
-                        <td className="px-4 py-2">
+                        <td className="p-2">
                           {Number(order.totalPrice)?.toLocaleString('vi-VN')}₫
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">
                           <select
                             value={order.status}
                             onChange={e =>
                               handleStatusChange(order.id, e.target.value)
                             }
-                            className="border rounded px-2 py-1"
+                            className="border rounded px-2 py-1 w-[94px]"
                           >
                             {ORDER_STATUSES.map(status => (
                               <option key={status} value={status}>
@@ -224,8 +254,9 @@ function Order() {
                             ))}
                           </select>
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">
                           <select
+                            className="border rounded px-2 py-1 w-[94px]"
                             value={order.paymentStatus || 'Pending'}
                             onChange={async e => {
                               const newPaymentStatus = e.target.value;
@@ -261,7 +292,6 @@ function Order() {
                                 alert(err.message);
                               }
                             }}
-                            className="border rounded px-2 py-1"
                           >
                             {PAYMENT_STATUSES.map(status => (
                               <option key={status} value={status}>
@@ -270,14 +300,24 @@ function Order() {
                             ))}
                           </select>
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="p-2">
                           {/* Removed Update button */}
-                          <button
-                            onClick={() => handleViewProductsClick(order.id)}
-                            className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
-                          >
-                            View Products
-                          </button>
+                          <div className="flex gap-2 text-base">
+                            <button
+                              onClick={() => handleViewProductsClick(order.id)}
+                              className="bg-green-600 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleDeleteProductsClick(order.id)
+                              }
+                              className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -290,7 +330,7 @@ function Order() {
                     <div className="bg-white rounded-lg p-6 max-w-5xl w-full max-h-[80vh] overflow-y-auto relative">
                       <button
                         onClick={closeModal}
-                        className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+                        className="absolute top-2 right-2 text-2xl text-gray-600 hover:text-gray-900"
                         aria-label="Close modal"
                       >
                         &#x2715;

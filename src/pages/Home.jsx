@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 function Home() {
   const navigate = useNavigate();
   const [productCount, setProductCount] = useState(null);
   const [totalRevenue, setTotalRevenue] = useState(null);
   const [totalRevenueToday, setTotalRevenueToday] = useState(null);
-
+  
   useEffect(() => {
     // Fetch product count
-    fetch('http://localhost:3001/api/dashboard/product-count', {
+    fetch(`${API_BASE_URL}/dashboard/product-count`, {
       credentials: 'include',
     })
       .then(res => res.json())
       .then(data => {
+        console.log('Product count data:', data);
         if (data.totalProductTypes !== undefined) {
           setProductCount(data.totalProductTypes);
         }
@@ -24,7 +27,7 @@ function Home() {
       });
 
     // Fetch total revenue
-    fetch('http://localhost:3001/api/dashboard/total-revenue', {
+    fetch(`${API_BASE_URL}/dashboard/total-revenue`, {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -38,7 +41,7 @@ function Home() {
       });
     // /dashboard
     // Fetch total revenue today
-    fetch('http://localhost:3001/api/dashboard/total-revenue-today', {
+    fetch(`${API_BASE_URL}/dashboard/total-revenue-today`, {
       credentials: 'include',
     })
       .then(res => res.json())
