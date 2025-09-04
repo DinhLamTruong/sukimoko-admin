@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -13,7 +14,7 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const handleSubmit = (values, { setSubmitting }) => {
-    fetch('http://localhost:3001/api/auth/login', {
+    fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

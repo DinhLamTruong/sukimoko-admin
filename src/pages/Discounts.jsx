@@ -32,7 +32,7 @@ export default function DiscountAdmin() {
   const fetchDiscounts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/admin/discounts`);
+      const res = await fetch(`${API_BASE_URL}/admin/discounts`);
       if (!res.ok) throw new Error('Failed to fetch discounts');
       const data = await res.json();
       // Map backend fields to frontend fields
